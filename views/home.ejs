@@ -4,40 +4,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home page</title>
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(120deg, #f6f8fa, #e9ecef);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2.5em;
+        }
+
+        .url-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .generated-url {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #4caf50;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        label {
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        button {
+            padding: 0.8rem 2rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .clicks-badge {
+            background: #e8f5e9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        /* Update these styles in your existing <style> tag */
+        .nav-bar {
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            /* Removed background: white and box-shadow */
+        }
+
+        .nav-brand {
+            font-size: 2.8rem;
+            /* Increased font size */
+            font-weight: bold;
+            color: #2c3e50;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            /* Added subtle text shadow */
+        }
+
+        .nav-buttons {
+            margin-left: auto;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #2980b9;
+            text-decoration: none;
+        }
+
+        .home-button {
+            background: #2ecc71;
+        }
+
+        .home-button:hover {
+            background: #27ae60;
+        }
+
+        .logout-button {
+            background: #e74c3c;
+        }
+
+        .logout-button:hover {
+            background: #c0392b;
+        }
+
+        .delete-button {
+            padding: 0.4rem 0.8rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .delete-button:hover {
+            background: #c0392b;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #4caf50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-button {
+            padding: 0.4rem 0.8rem;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .copy-button:hover {
+            background: #27ae60;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>URL Shortener</h1>
-    <% if (locals.id) { %>
-        <p>URL Generated : http://localhost:8001/url/<%= id %>
-        </p>
-        <% } %>
+    <div class="container">
+        <div class="nav-bar">
+            <div class="nav-brand">URL Shortener</div>
+            <div class="nav-buttons">
+                <a href="/logout" class="nav-button logout-button">Logout</a>
+            </div>
+        </div>
 
-            <form method="post" action="/url">
-                <label>Enter Your Original URL : </label>
-                <input type="text" name="url" placeholder="https://example.com" required>
-                <button type="submit">Generate</button>
-            </form>
+        <% if (locals.id) { %>
+            <div class="success-message">
+                <p>URL shortened successfully! Your short URL is:
+                    <a href="http://localhost:8001/url/<%= id %>" target="_blank">
+                        http://localhost:8001/url/<%= id %>
+                    </a>
+                </p>
+                <button class="copy-button" onclick="copyUrl('<%= id %>')">Copy URL</button>
+            </div>
+            <% } %>
 
-            <br>
-            <div>
+                <div class="url-form">
+                    <form method="post" action="/url">
+                        <div class="form-group">
+                            <label>Enter Your Original URL:</label>
+                            <input type="text" name="url" placeholder="https://example.com" required>
+                            <button type="submit">Generate</button>
+                        </div>
+                    </form>
+                </div>
+
                 <% if(locals.urls) { %>
-                    <table border="1" cellpadding="5" cellspacing="0">
+                    <table>
                         <thead>
-                            <th>Sr. No.</th>
-                            <th>ShortID</th>
-                            <th>Redirect</th>
-                            <th>Clicks</th>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Original URL</th>
+                                <th>Short URL</th>
+                                <th>Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <% urls.forEach((url, index)=> { %>
                                 <tr>
                                     <td>
-                                        <%= index+1 %>
-                                    </td>
-                                    <td>
-                                        <%= url.shortId %>
+                                        <%= index + 1 %>
                                     </td>
                                     <td>
                                         <a href="<%= url.redirectUrl %>" target="_blank">
@@ -45,15 +282,32 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <%= url.visitedHistory.length %>
+                                        <a href="http://localhost:8001/url/<%= url.shortId %>" target="_blank">
+                                            http://localhost:8001/url/<%= url.shortId %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <form action="/url/delete/<%= url.shortId %>" method="POST" style="margin: 0;">
+                                            <button type="submit" class="delete-button">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <% }) %>
                         </tbody>
                     </table>
                     <% } %>
-            </div>
+    </div>
 
+    <script>
+        function copyUrl(id) {
+            const url = `http://localhost:8001/url/${id}`;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Short URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy URL:', err);
+            });
+        }
+    </script>
 </body>
 
 </html>
