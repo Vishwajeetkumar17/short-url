@@ -19,13 +19,19 @@ npm init -y
 ## Add .env file
 
 PORT=8001
+
 MONGODB_URI=mongodb_uri
+
 JWT_SECRET=generate_jwt_token
+
 NODE_ENV=development
+
 COOKIE_EXPIRY=7
+
 BASE_URL=http://localhost:8001
 
 ## Run Command
 
 npm start
+
 
